@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Code 勉強会 vol.2 | AIコーディングを実践で学ぶ</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #111827;
+      --card: #1a2236;
+      --accent: #f97316;
+      --accent2: #fb923c;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d3748;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #0f172a 50%, #1a0a2e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      border-radius: 50%;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+      bottom: -80px; left: -80px;
+      border-radius: 50%;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(249,115,22,0.15);
+      border: 1px solid rgba(249,115,22,0.4);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 6px 18px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, #f97316, #fb923c, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      color: var(--muted);
+      margin-bottom: 40px;
+      max-width: 600px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .meta-item .icon { font-size: 20px; }
+
+    .btn-primary {
+      display: inline-block;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: var(--white);
+      font-size: 18px;
+      font-weight: 800;
+      padding: 18px 52px;
+      border-radius: 12px;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      box-shadow: 0 8px 32px rgba(249,115,22,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(249,115,22,0.55);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 96px 24px; }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 600px;
+      margin-bottom: 56px;
+    }
+
+    /* ── WHY ── */
+    .why { background: var(--dark); }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    .pain-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .pain-emoji { font-size: 28px; margin-bottom: 14px; }
+    .pain-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .pain-card p { font-size: 14px; color: var(--muted); }
+
+    .arrow-block { text-align: center; padding: 32px 0; }
+    .arrow-block .arrow { font-size: 40px; color: var(--accent); }
+    .arrow-block p { font-size: 1.2rem; font-weight: 700; margin-top: 8px; }
+
+    /* ── CONTENT ── */
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f97316, #fbbf24);
+    }
+
+    .content-card .num {
+      font-size: 48px;
+      font-weight: 900;
+      color: rgba(249,115,22,0.15);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .content-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .content-card p { font-size: 14px; color: var(--muted); }
+
+    /* ── AGENDA ── */
+    .agenda { background: var(--dark); }
+
+    .timeline { position: relative; padding-left: 32px; }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+
+    .timeline-item { position: relative; margin-bottom: 40px; }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -28px; top: 6px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(249,115,22,0.6);
+    }
+
+    .timeline-time {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .timeline-item h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .timeline-item p { font-size: 14px; color: var(--muted); }
+
+    /* ── FOR WHO ── */
+    .who-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .who-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+
+    .who-item .check {
+      flex-shrink: 0;
+      width: 24px; height: 24px;
+      background: rgba(249,115,22,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .who-item p { font-size: 15px; font-weight: 600; }
+
+    /* ── OUTCOME ── */
+    .outcome { background: var(--dark); }
+
+    .outcome-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .outcome-card {
+      text-align: center;
+      padding: 36px 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .outcome-card .big { font-size: 3rem; margin-bottom: 8px; }
+    .outcome-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .outcome-card p { font-size: 13px; color: var(--muted); }
+
+    /* ── DETAILS ── */
+    .detail-table { width: 100%; border-collapse: collapse; }
+    .detail-table tr { border-bottom: 1px solid var(--border); }
+
+    .detail-table th {
+      width: 120px;
+      padding: 20px 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .detail-table td { padding: 20px 0 20px 24px; font-size: 15px; color: var(--text); }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, #0f172a 0%, #1a0a2e 100%);
+      text-align: center;
+      padding: 96px 24px;
+    }
+
+    .cta-section h2 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; margin-bottom: 16px; }
+    .cta-section p { color: var(--muted); margin-bottom: 40px; font-size: 16px; }
+
+    .btn-secondary {
+      display: inline-block;
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      margin-top: 16px;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { background: rgba(249,115,22,0.1); }
+
+    .seats-badge {
+      display: inline-block;
+      background: rgba(249,115,22,0.1);
+      border: 1px solid rgba(249,115,22,0.3);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 6px;
+      margin-bottom: 24px;
+    }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 16px; }
+
+    details {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 20px 24px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    summary::after {
+      content: '+';
+      font-size: 22px;
+      color: var(--accent);
+      transition: transform 0.2s;
+    }
+
+    details[open] summary::after { transform: rotate(45deg); }
+
+    details p {
+      padding: 16px 24px 20px;
+      font-size: 14px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      section { padding: 64px 20px; }
+      .hero-meta { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="badge">✦ Claude Code 勉強会 vol.2</div>
+  <h1>AIと一緒にコードを書く、<br /><span>新しい開発体験</span>へ。</h1>
+  <p class="hero-sub">
+    話題の Claude Code を実際に動かしながら学ぶ、<br />
+    実践型ハンズオン勉強会を開催します。
+  </p>
+  <div class="hero-meta">
+    <div class="meta-item"><span class="icon">📅</span> 2026年4月1日（土）</div>
+    <div class="meta-item"><span class="icon">🕑</span> 14:00 〜 17:00</div>
+    <div class="meta-item"><span class="icon">📍</span> オンライン（Zoom）</div>
+    <div class="meta-item"><span class="icon">👥</span> 定員 20名</div>
+  </div>
+  <a href="#register" class="btn-primary">無料で参加申し込みする →</a>
+  <div class="scroll-hint">▼ SCROLL</div>
+</section>
+
+<!-- ── WHY ── -->
+<section class="why">
+  <div class="container">
+    <div class="section-label">WHY</div>
+    <h2 class="section-title">こんな悩みを持っていませんか？</h2>
+    <p class="section-desc">AIコーディングに興味はあるけど、なかなか一歩踏み出せていない方へ。</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-emoji">😅</div>
+        <h3>Claude Code って何ができるの？</h3>
+        <p>名前は聞いたことあるけど、GitHub Copilot との違いもわからない…</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-emoji">🤔</div>
+        <h3>導入してみたが使いこなせていない</h3>
+        <p>インストールしたけど、効果的な使い方がわからず放置している…</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-emoji">😓</div>
+        <h3>自分だけ取り残されそうで不安</h3>
+        <p>周りがAIで爆速開発しているのに、自分だけ置いてかれている気がする…</p>
+      </div>
+    </div>
+    <div class="arrow-block">
+      <div class="arrow">↓</div>
+      <p>この勉強会で<strong style="color:var(--accent)">すべて解決します。</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTENT ── -->
+<section>
+  <div class="container">
+    <div class="section-label">CONTENT</div>
+    <h2 class="section-title">学べること</h2>
+    <p class="section-desc">ハンズオン形式で、実際に手を動かしながら Claude Code の使い方を習得します。</p>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="num">01</div>
+        <h3>Claude Code とは何か</h3>
+        <p>概要・他のAIツールとの違い・できること／できないことを整理。まず全体像を把握します。</p>
+      </div>
+      <div class="content-card">
+        <div class="num">02</div>
+        <h3>セットアップ＆基本操作</h3>
+        <p>インストールから初回起動まで。ターミナル上での基本的な使い方を一緒にやってみます。</p>
+      </div>
+      <div class="content-card">
+        <div class="num">03</div>
+        <h3>プロンプトの書き方コツ</h3>
+        <p>思い通りのコードを生成させるための指示の出し方・CLAUDE.md の活用法を学びます。</p>
+      </div>
+      <div class="content-card">
+        <div class="num">04</div>
+        <h3>実践ハンズオン</h3>
+        <p>実際の業務課題をお題に、Claude Code でアプリを作る体験をします。GAS連携も扱います。</p>
+      </div>
+      <div class="content-card">
+        <div class="num">05</div>
+        <h3>Q&A＆ディスカッション</h3>
+        <p>参加者同士でのナレッジ共有。疑問点をリアルタイムで解決できます。</p>
+      </div>
+      <div class="content-card">
+        <div class="num">06</div>
+        <h3>活用事例の共有</h3>
+        <p>GAS × Claude Code の実際の活用事例を紹介。業務自動化のアイデアを持ち帰れます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AGENDA ── -->
+<section class="agenda">
+  <div class="container">
+    <div class="section-label">AGENDA</div>
+    <h2 class="section-title">タイムテーブル</h2>
+    <p class="section-desc">3時間でClaudeCodeの基礎から実践まで、濃密に学べるプログラムです。</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-time">14:00 〜 14:10</div>
+        <h3>オープニング・自己紹介</h3>
+        <p>本日の流れと参加者紹介。アイスブレイク。</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">14:10 〜 14:40</div>
+        <h3>Claude Code 基礎講座</h3>
+        <p>概要・セットアップ・基本コマンドをデモ付きで解説。</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">14:40 〜 15:40</div>
+        <h3>ハンズオン①：最初の一歩</h3>
+        <p>参加者自身のPCで実際に動かしてみる。簡単なアプリ作成を体験。</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">15:40 〜 15:50</div>
+        <h3>休憩</h3>
+        <p>10分間の休憩タイム。</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">15:50 〜 16:40</div>
+        <h3>ハンズオン②：GAS × Claude Code</h3>
+        <p>Google Apps Script と連携した業務自動化ツールを Claude Code で作ってみる。</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">16:40 〜 17:00</div>
+        <h3>Q&A・ディスカッション・クロージング</h3>
+        <p>質疑応答・参加者同士の情報交換。次回告知。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOR WHO ── -->
+<section>
+  <div class="container">
+    <div class="section-label">FOR WHO</div>
+    <h2 class="section-title">こんな方に来てほしい</h2>
+    <p class="section-desc">プログラミング経験の有無は問いません。「AIで仕事を楽にしたい」という気持ちがあれば大歓迎です。</p>
+    <div class="who-list">
+      <div class="who-item">
+        <div class="check">✓</div>
+        <p>Claude Code に興味があるが、まだ使ったことがない</p>
+      </div>
+      <div class="who-item">
+        <div class="check">✓</div>
+        <p>GAS や業務自動化ツールを作りたいと思っている</p>
+      </div>
+      <div class="who-item">
+        <div class="check">✓</div>
+        <p>AI × 開発の最新動向をキャッチアップしたい</p>
+      </div>
+      <div class="who-item">
+        <div class="check">✓</div>
+        <p>他の参加者と知見を共有し、モチベーションを高めたい</p>
+      </div>
+      <div class="who-item">
+        <div class="check">✓</div>
+        <p>すでに使っているが、もっと上手く使いこなしたい</p>
+      </div>
+      <div class="who-item">
+        <div class="check">✓</div>
+        <p>業務の手作業・繰り返し作業を減らしたい</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── OUTCOME ── -->
+<section class="outcome">
+  <div class="container">
+    <div class="section-label">OUTCOME</div>
+    <h2 class="section-title">参加後に得られること</h2>
+    <p class="section-desc">勉強会終了後、すぐに実務で活かせるスキルとマインドセットをお持ち帰りください。</p>
+    <div class="outcome-grid">
+      <div class="outcome-card">
+        <div class="big">⚡</div>
+        <h3>即日から使える<br />実践スキル</h3>
+        <p>その日のうちに自分のプロジェクトで Claude Code を試せるようになります。</p>
+      </div>
+      <div class="outcome-card">
+        <div class="big">🗺</div>
+        <h3>AIコーディングの<br />全体マップ</h3>
+        <p>ツール選定・使い分けの判断軸が明確になります。</p>
+      </div>
+      <div class="outcome-card">
+        <div class="big">🤝</div>
+        <h3>同じ志を持つ<br />仲間とのつながり</h3>
+        <p>情報交換できるコミュニティへのアクセスが得られます。</p>
+      </div>
+      <div class="outcome-card">
+        <div class="big">🚀</div>
+        <h3>業務自動化の<br />アイデアと着想</h3>
+        <p>自分の業務に応用できる具体的なアイデアを持ち帰れます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DETAILS ── -->
+<section>
+  <div class="container">
+    <div class="section-label">DETAILS</div>
+    <h2 class="section-title">開催概要</h2>
+    <p class="section-desc" style="margin-bottom: 32px;">参加前にご確認ください。</p>
+    <table class="detail-table">
+      <tr>
+        <th>日時</th>
+        <td>2026年4月1日（土）14:00 〜 17:00（13:50 入室開始）</td>
+      </tr>
+      <tr>
+        <th>開催形式</th>
+        <td>オンライン（Zoom）<br /><small style="color:var(--muted)">申込後にZoomリンクをお送りします</small></td>
+      </tr>
+      <tr>
+        <th>定員</th>
+        <td>20名（先着順）</td>
+      </tr>
+      <tr>
+        <th>参加費</th>
+        <td><strong style="color:var(--accent); font-size:1.2em;">無料</strong></td>
+      </tr>
+      <tr>
+        <th>準備物</th>
+        <td>PC（Mac / Windows）・インターネット環境<br /><small style="color:var(--muted)">Claude のアカウントがあると当日スムーズです</small></td>
+      </tr>
+      <tr>
+        <th>主催</th>
+        <td>Claude Code 勉強会 運営チーム</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section" id="register">
+  <div class="container">
+    <div class="seats-badge">🔥 残り20席 ／ 定員20名</div>
+    <h2>さあ、<span style="color:var(--accent)">一歩踏み出そう。</span></h2>
+    <p>無料参加・先着順。定員に達し次第、受付を終了します。</p>
+    <a href="#" class="btn-primary" style="font-size:20px; padding: 20px 60px;">
+      今すぐ参加申し込みする →
+    </a>
+    <br />
+    <a href="#" class="btn-secondary">お問い合わせはこちら</a>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section>
+  <div class="container">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">よくある質問</h2>
+    <p class="section-desc" style="margin-bottom: 40px;"></p>
+    <div class="faq-list">
+      <details>
+        <summary>プログラミング初心者でも参加できますか？</summary>
+        <p>もちろん大歓迎です。基礎から丁寧に解説しますので、コードを書いたことがない方でも安心してご参加いただけます。</p>
+      </details>
+      <details>
+        <summary>Claude のアカウントは事前に用意が必要ですか？</summary>
+        <p>必須ではありませんが、事前に作成しておくとハンズオンをよりスムーズに体験できます。無料プランでも参加可能です。</p>
+      </details>
+      <details>
+        <summary>録画・アーカイブはありますか？</summary>
+        <p>参加者限定で録画を共有する予定です。当日参加できない方もお申し込みいただければアーカイブをご覧いただけます。</p>
+      </details>
+      <details>
+        <summary>Mac・Windowsどちらでも参加できますか？</summary>
+        <p>どちらにも対応しています。セットアップ手順は当日ご案内します。</p>
+      </details>
+      <details>
+        <summary>vol.1 に参加していなくても大丈夫ですか？</summary>
+        <p>vol.1 未参加の方でも問題ありません。今回は独立した内容となっていますので、初めての方もそのままお楽しみいただけます。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>© 2026 Claude Code 勉強会 運営チーム. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
