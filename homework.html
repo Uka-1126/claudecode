@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Codeで業務改善 — 新しい働き方をはじめよう</title>
+  <style>
+    :root {
+      --bg: #f8f7ff;
+      --white: #ffffff;
+      --purple: #7c3aed;
+      --purple-light: #a855f7;
+      --blue: #3b82f6;
+      --coral: #f97316;
+      --green: #10b981;
+      --text: #1e1b4b;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --card: #ffffff;
+      --grad1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --grad2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --grad3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --grad4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --grad5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 40%, #f093fb 100%);
+      color: #fff;
+      padding: 100px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -40px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: #fff;
+      border-radius: 999px;
+      padding: 6px 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 900;
+      line-height: 1.25;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #fde68a, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      opacity: 0.92;
+      max-width: 640px;
+      margin: 0 auto 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-cta-wrap {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-primary {
+      background: #fff;
+      color: var(--purple);
+      padding: 16px 40px;
+      border-radius: 999px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.25); }
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.7);
+      padding: 14px 32px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 56px;
+      position: relative;
+      z-index: 1;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1;
+      color: #fde68a;
+    }
+    .stat-label { font-size: 0.82rem; opacity: 0.85; margin-top: 4px; }
+
+    /* ===== SECTION BASE ===== */
+    section { padding: 80px 24px; }
+    .container { max-width: 1080px; margin: 0 auto; }
+    .section-label {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 580px;
+      margin-bottom: 48px;
+    }
+    .center { text-align: center; }
+    .center .section-desc { margin: 0 auto 48px; }
+
+    /* ===== PAIN SECTION ===== */
+    .pain-section { background: #fff; }
+    .pain-section .section-label { background: #fef3c7; color: #d97706; }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .pain-card {
+      background: #fafafa;
+      border: 1.5px solid #f3e8ff;
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pain-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(124,58,237,0.1); }
+    .pain-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .pain-card h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .pain-card p { font-size: 0.88rem; color: var(--muted); }
+
+    /* ===== WHAT IS SECTION ===== */
+    .what-section { background: var(--bg); }
+    .what-section .section-label { background: #ede9fe; color: #7c3aed; }
+    .what-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    @media(max-width: 700px) { .what-grid { grid-template-columns: 1fr; } }
+    .what-visual {
+      background: var(--grad1);
+      border-radius: 24px;
+      padding: 40px;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      box-shadow: 0 20px 60px rgba(124,58,237,0.25);
+    }
+    .what-visual .line { opacity: 0.85; }
+    .what-visual .highlight { color: #fde68a; font-weight: 700; }
+    .what-visual .green { color: #6ee7b7; }
+    .what-visual .pink { color: #fca5a5; }
+    .what-text h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 16px; }
+    .what-text p { color: var(--muted); font-size: 1rem; margin-bottom: 20px; }
+    .what-tag-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
+    .what-tag {
+      background: #ede9fe;
+      color: #7c3aed;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ===== USE CASES ===== */
+    .cases-section { background: #fff; }
+    .cases-section .section-label { background: #d1fae5; color: #059669; }
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .case-card {
+      border-radius: 20px;
+      padding: 32px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .case-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.15); }
+    .case-card:nth-child(1) { background: var(--grad1); }
+    .case-card:nth-child(2) { background: var(--grad3); }
+    .case-card:nth-child(3) { background: var(--grad4); color: #065f46; }
+    .case-card:nth-child(4) { background: var(--grad5); color: #78350f; }
+    .case-card:nth-child(5) { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #4c1d95; }
+    .case-card:nth-child(6) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #7c2d12; }
+    .case-num {
+      font-size: 3rem;
+      font-weight: 900;
+      opacity: 0.18;
+      position: absolute;
+      top: 12px; right: 20px;
+      line-height: 1;
+    }
+    .case-icon { font-size: 2rem; margin-bottom: 14px; }
+    .case-card h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 10px; }
+    .case-card p { font-size: 0.88rem; opacity: 0.88; line-height: 1.6; }
+    .case-before-after {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .ba-before {
+      background: rgba(0,0,0,0.12);
+      padding: 4px 10px;
+      border-radius: 8px;
+      text-decoration: line-through;
+      opacity: 0.75;
+    }
+    .ba-arrow { opacity: 0.8; }
+    .ba-after {
+      background: rgba(255,255,255,0.3);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    /* ===== EXCITEMENT SECTION ===== */
+    .excite-section {
+      background: linear-gradient(135deg, #f8f7ff 0%, #fdf4ff 50%, #f0f9ff 100%);
+      text-align: center;
+    }
+    .excite-section .section-label { background: #fce7f3; color: #be185d; }
+    .excite-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 16px;
+    }
+    .excite-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px 24px;
+      box-shadow: 0 4px 20px rgba(124,58,237,0.08);
+      border: 1.5px solid #f3e8ff;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .excite-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(124,58,237,0.15); }
+    .excite-card .emoji { font-size: 3rem; margin-bottom: 16px; }
+    .excite-card h3 { font-size: 1.1rem; font-weight: 800; color: var(--purple); margin-bottom: 10px; }
+    .excite-card p { font-size: 0.88rem; color: var(--muted); }
+
+    /* ===== STEPS ===== */
+    .steps-section { background: var(--white); }
+    .steps-section .section-label { background: #dbeafe; color: #1d4ed8; }
+    .steps-wrap { display: flex; flex-direction: column; gap: 0; }
+    .step-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      align-items: flex-start;
+      padding: 28px 0;
+      border-bottom: 1.5px dashed var(--border);
+      position: relative;
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .step-num.s1 { background: var(--grad1); }
+    .step-num.s2 { background: var(--grad3); }
+    .step-num.s3 { background: var(--grad4); }
+    .step-num.s4 { background: var(--grad5); }
+    .step-num.s5 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+    .step-body h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; padding-top: 12px; }
+    .step-body p { font-size: 0.9rem; color: var(--muted); }
+    .step-tip {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 999px;
+      margin-top: 10px;
+    }
+
+    /* ===== VOICES ===== */
+    .voices-section { background: var(--bg); }
+    .voices-section .section-label { background: #fce7f3; color: #be185d; }
+    .voices-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .voice-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1.5px solid var(--border);
+      position: relative;
+    }
+    .voice-quote {
+      font-size: 4rem;
+      line-height: 1;
+      color: #ede9fe;
+      margin-bottom: -8px;
+      font-family: Georgia, serif;
+    }
+    .voice-text { font-size: 0.95rem; color: var(--text); margin-bottom: 20px; line-height: 1.7; }
+    .voice-person { display: flex; align-items: center; gap: 12px; }
+    .voice-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .voice-card:nth-child(1) .voice-avatar { background: #ede9fe; }
+    .voice-card:nth-child(2) .voice-avatar { background: #d1fae5; }
+    .voice-card:nth-child(3) .voice-avatar { background: #fce7f3; }
+    .voice-name { font-weight: 700; font-size: 0.9rem; }
+    .voice-role { font-size: 0.78rem; color: var(--muted); }
+    .stars { color: #fbbf24; font-size: 0.9rem; margin-bottom: 4px; }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      color: #fff;
+      text-align: center;
+      padding: 100px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '✨';
+      position: absolute;
+      font-size: 8rem;
+      top: -20px; left: 5%;
+      opacity: 0.1;
+    }
+    .cta-section::after {
+      content: '🚀';
+      position: absolute;
+      font-size: 8rem;
+      bottom: -20px; right: 5%;
+      opacity: 0.1;
+    }
+    .cta-section h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-section p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 540px;
+      margin: 0 auto 40px;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-btn-wrap {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-btn {
+      background: #fff;
+      color: var(--purple);
+      padding: 18px 48px;
+      border-radius: 999px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-block;
+    }
+    .cta-btn:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+    .cta-sub-btn {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+      align-self: center;
+    }
+    .cta-sub-btn:hover { opacity: 0.7; }
+    .cta-note {
+      margin-top: 24px;
+      font-size: 0.82rem;
+      opacity: 0.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== FAQ ===== */
+    .faq-section { background: var(--white); }
+    .faq-section .section-label { background: #dbeafe; color: #1d4ed8; }
+    .faq-list { display: flex; flex-direction: column; gap: 12px; max-width: 720px; margin: 0 auto; }
+    details {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    details[open] { box-shadow: 0 4px 20px rgba(124,58,237,0.1); border-color: #c4b5fd; }
+    summary {
+      padding: 20px 24px;
+      font-weight: 700;
+      font-size: 0.97rem;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: '+';
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--purple);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    details[open] summary::after { transform: rotate(45deg); }
+    .faq-answer { padding: 0 24px 20px; font-size: 0.92rem; color: var(--muted); line-height: 1.75; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 40px 24px;
+      font-size: 0.85rem;
+    }
+    footer strong { color: #fff; font-size: 1rem; }
+
+    /* ===== FLOATING ELEMENTS ===== */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.3); }
+      50% { box-shadow: 0 0 0 16px rgba(124,58,237,0); }
+    }
+    .float { animation: float 4s ease-in-out infinite; }
+    .pulse { animation: pulse-glow 2.5s ease-in-out infinite; }
+
+    /* ===== DIVIDER ===== */
+    .wave-divider { overflow: hidden; line-height: 0; }
+    .wave-divider svg { display: block; }
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width: 600px) {
+      .hero { padding: 72px 20px 60px; }
+      .hero-stats { gap: 24px; }
+      .step-item { grid-template-columns: 64px 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-badge">✨ Claude Code × 業務改善</div>
+  <h1>
+    あなたの仕事を、<br>
+    <em>もっとワクワクする</em>ものに。
+  </h1>
+  <p class="hero-sub">
+    Claude Codeを使えば、毎日の繰り返し作業を自動化し、<br>
+    本当にやりたいクリエイティブな仕事に集中できます。
+  </p>
+  <div class="hero-cta-wrap">
+    <a href="#" class="btn-primary pulse">🚀 今すぐ始める</a>
+    <a href="#" class="btn-secondary">詳しく見る →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">80<span style="font-size:1.4rem">%</span></div>
+      <div class="stat-label">作業時間の削減</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3<span style="font-size:1.4rem">倍</span></div>
+      <div class="stat-label">アウトプットが向上</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0<span style="font-size:1.4rem">円</span></div>
+      <div class="stat-label">始めるのに費用なし</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">1<span style="font-size:1.4rem">日</span></div>
+      <div class="stat-label">で成果を実感</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PAIN ===== -->
+<section class="pain-section">
+  <div class="container">
+    <div class="center" style="margin-bottom: 48px;">
+      <span class="section-label">こんな悩みありませんか？</span>
+      <h2 class="section-title">毎日の「めんどくさい」が<br>積み重なっていませんか？</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">😩</div>
+        <div>
+          <h3>同じ作業を毎日繰り返している</h3>
+          <p>報告書の転記、データの整理、フォーマット作業…自動化できるはずなのに手作業のまま。</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">⏰</div>
+        <div>
+          <h3>会議の議事録に時間をとられる</h3>
+          <p>本来は業務改善のアイデアを出したいのに、まとめ作業で1時間以上取られてしまう。</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📊</div>
+        <div>
+          <h3>スプレッドシートが複雑すぎる</h3>
+          <p>関数やマクロを組むのが大変で、誰も管理できない"属人化ファイル"になっている。</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🤖</div>
+        <div>
+          <h3>AIを使いたいけど使いこなせない</h3>
+          <p>ChatGPTは触ったけど、実際の業務にどう組み込めばいいかわからない。</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">💭</div>
+        <div>
+          <h3>改善したいけど時間がない</h3>
+          <p>「いつか整理しよう」と思いながら何ヶ月も経過。改善のための時間が確保できない。</p>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔄</div>
+        <div>
+          <h3>ツールを作れるスキルがない</h3>
+          <p>プログラミングが必要なら自分には無理…と諦めてしまっている。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHAT IS ===== -->
+<section class="what-section">
+  <div class="container">
+    <div class="what-grid">
+      <div class="what-visual float">
+<pre class="line"><span class="green">// Claude Code との対話</span></pre>
+<pre class="line"><span class="highlight">あなた：</span> 毎週の売上レポートを</pre>
+<pre class="line">　　　　自動で作って</pre>
+<pre class="line"></pre>
+<pre class="line"><span class="highlight">Claude：</span> わかりました！</pre>
+<pre class="line"><span class="green">✓</span> スプレッドシート取得</pre>
+<pre class="line"><span class="green">✓</span> データ集計・グラフ作成</pre>
+<pre class="line"><span class="green">✓</span> PDF出力 → 自動送信</pre>
+<pre class="line"></pre>
+<pre class="line"><span class="pink">⚡ 2時間 → 0分に削減！</span></pre>
+      </div>
+      <div class="what-text">
+        <span class="section-label" style="background:#ede9fe; color:#7c3aed;">Claude Codeとは？</span>
+        <h2 class="section-title">会話するだけで<br>ツールが完成する</h2>
+        <p>Claude Codeは、Anthropicが開発したAIコーディングエージェントです。プログラミング知識がなくても、日本語で話しかけるだけで業務改善ツールを作れます。</p>
+        <p>Google Apps Script、スプレッドシート連携、自動化フローの構築まで、あなたの"やりたいこと"を形にします。</p>
+        <div class="what-tag-wrap">
+          <span class="what-tag">🗣️ 日本語対応</span>
+          <span class="what-tag">⚡ リアルタイム生成</span>
+          <span class="what-tag">🔗 Google連携</span>
+          <span class="what-tag">🛠️ GAS自動作成</span>
+          <span class="what-tag">📈 業務自動化</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== USE CASES ===== -->
+<section class="cases-section">
+  <div class="container">
+    <div class="center" style="margin-bottom: 48px;">
+      <span class="section-label">活用事例</span>
+      <h2 class="section-title">こんな業務が<br>自動化できます</h2>
+      <p class="section-desc">Claude Codeが実際に解決できる、現場のリアルな課題たち。</p>
+    </div>
+    <div class="cases-grid">
+      <div class="case-card">
+        <div class="case-num">01</div>
+        <div class="case-icon">📋</div>
+        <h3>日報・議事録の自動生成</h3>
+        <p>音声入力やメモから、フォーマットに沿った日報・議事録を自動作成。</p>
+        <div class="case-before-after">
+          <span class="ba-before">30分/件</span>
+          <span class="ba-arrow">→</span>
+          <span class="ba-after">3分/件</span>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-num">02</div>
+        <div class="case-icon">📅</div>
+        <h3>日程調整の完全自動化</h3>
+        <p>複数人のカレンダーから空き時間を検索し、候補日程を自動提案。</p>
+        <div class="case-before-after">
+          <span class="ba-before">往復メール5回</span>
+          <span class="ba-arrow">→</span>
+          <span class="ba-after">1クリック</span>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-num">03</div>
+        <div class="case-icon">📊</div>
+        <h3>レポート・集計の自動化</h3>
+        <p>スプレッドシートのデータを集計し、グラフ付きレポートを自動生成。</p>
+        <div class="case-before-after">
+          <span class="ba-before">2時間/週</span>
+          <span class="ba-arrow">→</span>
+          <span class="ba-after">全自動</span>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-num">04</div>
+        <div class="case-icon">📨</div>
+        <h3>メール・通知の自動送信</h3>
+        <p>特定条件をトリガーに、Slack・Gmailへの通知を自動化。</p>
+        <div class="case-before-after">
+          <span class="ba-before">手動確認・送信</span>
+          <span class="ba-arrow">→</span>
+          <span class="ba-after">ゼロタッチ</span>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-num">05</div>
+        <div class="case-icon">📝</div>
+        <h3>フォーム & 申請フロー構築</h3>
+        <p>申請フォームの作成から承認フロー、通知までワンセットで自動化。</p>
+        <div class="case-before-after">
+          <span class="ba-before">紙 or 口頭確認</span>
+          <span class="ba-arrow">→</span>
+          <span class="ba-after">デジタル完結</span>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-num">06</div>
+        <div class="case-icon">🔍</div>
+        <h3>データ収集・リサーチ</h3>
+        <p>Web上の情報収集・整理・要約をClaude Codeが代行。</p>
+        <div class="case-before-after">
+          <span class="ba-before">数時間の調査</span>
+          <span class="ba-arrow">→</span>
+          <span class="ba-after">数分で完了</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXCITEMENT ===== -->
+<section class="excite-section">
+  <div class="container">
+    <div class="center" style="margin-bottom: 48px;">
+      <span class="section-label">新しい体験</span>
+      <h2 class="section-title">使い始めると、<br>仕事が楽しくなる</h2>
+      <p class="section-desc">Claude Codeは、単なる効率化ツールではありません。<br>仕事への向き合い方そのものが変わります。</p>
+    </div>
+    <div class="excite-cards">
+      <div class="excite-card">
+        <div class="emoji">⚡</div>
+        <h3>アイデアがすぐ形に</h3>
+        <p>「こんなツールがあれば…」という発想を、その日のうちに動くものにできる。</p>
+      </div>
+      <div class="excite-card">
+        <div class="emoji">🎯</div>
+        <h3>本質的な仕事に集中</h3>
+        <p>雑務から解放されて、創造性が求められる仕事に全力を注げる。</p>
+      </div>
+      <div class="excite-card">
+        <div class="emoji">🌱</div>
+        <h3>スキルが自然と育つ</h3>
+        <p>使うたびにコードへの理解が深まり、自分のできることが広がっていく。</p>
+      </div>
+      <div class="excite-card">
+        <div class="emoji">🤝</div>
+        <h3>チームに貢献できる</h3>
+        <p>自分が作ったツールで同僚の仕事が楽になる。その達成感がまたわくわくを生む。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STEPS ===== -->
+<section class="steps-section">
+  <div class="container">
+    <span class="section-label" style="background:#dbeafe; color:#1d4ed8;">始め方</span>
+    <h2 class="section-title">今日から5ステップで<br>業務改善をスタート</h2>
+    <p class="section-desc" style="margin-bottom: 40px;">難しい準備は一切不要。すぐに試せます。</p>
+    <div class="steps-wrap">
+      <div class="step-item">
+        <div class="step-num-wrap">
+          <div class="step-num s1">1</div>
+        </div>
+        <div class="step-body">
+          <h3>Claude Codeをインストール</h3>
+          <p>npmでインストールするだけ。Anthropicのアカウントがあれば今すぐ始められます。</p>
+          <span class="step-tip">🕐 所要時間：約5分</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap">
+          <div class="step-num s2">2</div>
+        </div>
+        <div class="step-body">
+          <h3>改善したい業務を書き出す</h3>
+          <p>「毎週やっている作業」「手間がかかっている作業」を3つ書き出しましょう。</p>
+          <span class="step-tip">💡 紙でもメモアプリでもOK</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap">
+          <div class="step-num s3">3</div>
+        </div>
+        <div class="step-body">
+          <h3>Claude Codeに話しかける</h3>
+          <p>「〇〇を自動化したい」「△△のツールを作って」と日本語で伝えるだけでOK。</p>
+          <span class="step-tip">🗣️ プログラミング知識不要</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap">
+          <div class="step-num s4">4</div>
+        </div>
+        <div class="step-body">
+          <h3>生成されたコードをテスト</h3>
+          <p>Claude Codeがコードを書いてくれます。動かして確認し、修正も会話で依頼できます。</p>
+          <span class="step-tip">🔄 何度でも改善できる</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap">
+          <div class="step-num s5">5</div>
+        </div>
+        <div class="step-body">
+          <h3>業務に導入して効果を実感</h3>
+          <p>ツールを実際の業務に組み込み、時間の節約・ミスの削減を体感しましょう！</p>
+          <span class="step-tip">🎉 最初の成功体験が大事</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VOICES ===== -->
+<section class="voices-section">
+  <div class="container">
+    <div class="center" style="margin-bottom: 48px;">
+      <span class="section-label" style="background:#fce7f3; color:#be185d;">体験者の声</span>
+      <h2 class="section-title">使ってみた人の<br>リアルな感想</h2>
+    </div>
+    <div class="voices-grid">
+      <div class="voice-card">
+        <div class="voice-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="voice-text">週次レポートの作成が2時間かかっていたのが、Claude Codeで自動化したら完全に0になりました。最初は半信半疑でしたが、本当に会話するだけで動くツールができて感動しました。</p>
+        <div class="voice-person">
+          <div class="voice-avatar">👨‍💼</div>
+          <div>
+            <div class="voice-name">田中 誠さん</div>
+            <div class="voice-role">営業マネージャー・35歳</div>
+          </div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="voice-text">プログラミングは全くできないのに、Claude Codeを使ったらGASでカレンダー自動化ツールが作れました。「これ自分で作ったの？」とチームに驚かれて自信がつきました！</p>
+        <div class="voice-person">
+          <div class="voice-avatar">👩‍💻</div>
+          <div>
+            <div class="voice-name">山田 花子さん</div>
+            <div class="voice-role">バックオフィス担当・28歳</div>
+          </div>
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="voice-text">申請フローのデジタル化に半年悩んでいましたが、Claude Codeで3日で完成。コストもゼロ。今では毎週新しいツールを作るのが楽しくなってしまいました（笑）</p>
+        <div class="voice-person">
+          <div class="voice-avatar">👨‍🔬</div>
+          <div>
+            <div class="voice-name">鈴木 健さん</div>
+            <div class="voice-role">総務部リーダー・42歳</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <h2>さあ、新しい働き方を<br>体験しよう</h2>
+  <p>今日から始めれば、今週中に最初のツールが完成します。<br>難しいことは何もありません。</p>
+  <div class="cta-btn-wrap">
+    <a href="#" class="cta-btn">🚀 無料で始める</a>
+    <a href="#" class="cta-sub-btn">まず詳しく聞きたい →</a>
+  </div>
+  <p class="cta-note">※ 登録無料・クレジットカード不要・いつでも退会可能</p>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section">
+  <div class="container">
+    <div class="center" style="margin-bottom: 48px;">
+      <span class="section-label" style="background:#dbeafe; color:#1d4ed8;">よくある質問</span>
+      <h2 class="section-title">気になる疑問を<br>解消しましょう</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>プログラミング経験がなくても使えますか？</summary>
+        <div class="faq-answer">はい、問題ありません。Claude Codeは日本語で話しかけるだけでコードを生成してくれます。専門知識がなくても、「こんなことがしたい」と伝えるだけで動くツールが完成します。</div>
+      </details>
+      <details>
+        <summary>どんな業務に向いていますか？</summary>
+        <div class="faq-answer">定期的に繰り返す作業（レポート作成、データ集計、通知送信など）に特に効果を発揮します。Google Workspace（スプレッドシート、カレンダー、Gmail）との連携が得意です。</div>
+      </details>
+      <details>
+        <summary>費用はどのくらいかかりますか？</summary>
+        <div class="faq-answer">Claude Codeの利用はAnthropicのAPIを通じて行います。利用量に応じた従量課金制ですが、個人の業務改善用途であれば月数百円〜数千円程度が目安です。まずは無料枠でお試しいただけます。</div>
+      </details>
+      <details>
+        <summary>セキュリティは大丈夫ですか？</summary>
+        <div class="faq-answer">ローカル環境で動作するため、会社の機密情報を外部に送信するリスクを最小化できます。ただし、APIを通じてAnthropicのサーバーと通信する点はご認識ください。社内の情報セキュリティポリシーをご確認の上ご利用ください。</div>
+      </details>
+      <details>
+        <summary>どこで学べばいいですか？</summary>
+        <div class="faq-answer">公式ドキュメントに加え、実際に使いながら学ぶのが一番の近道です。まずは小さな自動化から始めて、成功体験を積み重ねていきましょう。このコミュニティでも仲間と一緒に学べます。</div>
+      </details>
+      <details>
+        <summary>どのくらいで効果が出ますか？</summary>
+        <div class="faq-answer">多くの方が初日から効果を実感されています。最初の簡単な自動化（例：Googleフォームの回答をスプレッドシートに整理する等）は数時間で完成します。1週間もあれば、目に見える時間削減が実現できます。</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <strong>Claude Code 業務改善プロジェクト</strong>
+  <p style="margin-top: 8px;">新しい働き方で、もっとワクワクする毎日を。</p>
+  <p style="margin-top: 16px; font-size: 0.78rem; opacity: 0.5;">© 2026 Claude Code 勉強会 運営チーム. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
